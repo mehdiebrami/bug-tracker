@@ -1,0 +1,14 @@
+spring:
+  mvc:
+    servlet:
+      path: /bug-tracker/api
+  application:
+    name: bug-tracker
+  data:
+    mongodb:
+      database: bug_tracker
+
+#CUSTOME PROPERTIES
+project:
+  version: @project.version@
+  description: @project.description@

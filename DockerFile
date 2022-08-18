@@ -1,0 +1,6 @@
+#this docker file is just simple version as sample of my projects docker
+
+FROM openjdk:17
+ARG JAR_FILE=*.jar
+COPY target/${JAR_FILE} application.jar
+ENTRYPOINT ["java", "-jar", "bug-tracker.jar"]
