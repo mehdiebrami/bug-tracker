@@ -1,8 +1,0 @@
-#this docker composed file is just simple version as sample of my projects docker
-version: '3.7'
-
-services:
-  bug-tracker:
-    image: 89f40f6d9971:latest
-    ports:
-      - "8080:80"
