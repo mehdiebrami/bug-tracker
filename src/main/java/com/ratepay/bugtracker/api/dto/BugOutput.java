@@ -1,22 +1,21 @@
 package com.ratepay.bugtracker.api.dto;
 
-import com.ratepay.bugtracker.model.PriorityType;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class BugResponse {
+public class BugOutput {
 
 	private String id;
 
 	private String reporter;
 
-	private String project;
+	private String projectName;
 
 	private String summary;
 
-	private PriorityType priority;
+	private PriorityTypeDto priority;
 
 	private Long createdDate;
 

@@ -2,10 +2,11 @@ package com.ratepay.bugtracker.api;
 
 import java.util.Date;
 
-import com.ratepay.bugtracker.api.dto.BugRequest;
+import com.ratepay.bugtracker.api.dto.BugInput;
 import com.ratepay.bugtracker.api.dto.PriorityTypeDto;
-import com.ratepay.bugtracker.api.dto.UpdateBugRequest;
+import com.ratepay.bugtracker.api.dto.UpdateBugInput;
 import com.ratepay.bugtracker.exception.NotFoundBugException;
+import com.ratepay.bugtracker.exception.NotFoundProjectException;
 import com.ratepay.bugtracker.service.BugService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BugResourceIT {
+class BugResourceIT {
 	@LocalServerPort
 	private int port;
 
@@ -41,20 +42,20 @@ public class BugResourceIT {
 
 
 	@Test
-	public void addBug_success() {
+	void addBug_success() throws NotFoundBugException, NotFoundProjectException {
 		Mockito.when(bugService.addBug(Mockito.any())).thenReturn("62fd44ad63ad587a21dbe7d8");
 		long time = new Date().getTime();
-		BugRequest bugRequest = new BugRequest();
-		bugRequest.setAssignee("MEHDI_DEV");
-		bugRequest.setDueDate(time);
-		bugRequest.setPriority(PriorityTypeDto.CRITICAL);
-		bugRequest.setProject("RatePay");
-		bugRequest.setSummary("Wrong balance!");
-		bugRequest.setReporter("MR. EBRAHIMI");
-		bugRequest.setDescription("Wrong balance! after pay");
+		BugInput bugInput = new BugInput();
+		bugInput.setAssignee("MEHDI_DEV");
+		bugInput.setDueDate(time);
+		bugInput.setPriority(PriorityTypeDto.CRITICAL);
+		bugInput.setProjectId("RatePay");
+		bugInput.setSummary("Wrong balance!");
+		bugInput.setReporter("MR. EBRAHIMI");
+		bugInput.setDescription("Wrong balance! after pay");
 
 		String url = String.format("http://localhost:%d/bug-tracker/api/bugs", port);
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(bugRequest),
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(bugInput),
 				String.class);
 		assertThat(response).isNotNull();
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -64,66 +65,66 @@ public class BugResourceIT {
 	}
 
 	@Test
-	public void addBug_validation_failed() {
- 		long time = new Date().getTime();
-		BugRequest bugRequest = new BugRequest();
-		bugRequest.setAssignee("MEHDI_DEV");
-		bugRequest.setDueDate(time);
-		bugRequest.setPriority(PriorityTypeDto.LOW);
-		bugRequest.setProject("RatePay");
+	void addBug_validation_failed() {
+		long time = new Date().getTime();
+		BugInput bugInput = new BugInput();
+		bugInput.setAssignee("MEHDI_DEV");
+		bugInput.setDueDate(time);
+		bugInput.setPriority(PriorityTypeDto.LOW);
+		bugInput.setProjectId("RatePay");
 
 
 		String url = String.format("http://localhost:%d/bug-tracker/api/bugs", port);
-		ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(bugRequest),
+		ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.POST, new HttpEntity<>(bugInput),
 				Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
 
 	@Test
-	public void updateBug_success() {
+	void updateBug_success() {
 		long time = new Date().getTime();
-		BugRequest bugRequest = new BugRequest();
-		bugRequest.setAssignee("MEHDI_DEV");
-		bugRequest.setDueDate(time);
-		bugRequest.setPriority(PriorityTypeDto.CRITICAL);
+		BugInput bugInput = new BugInput();
+		bugInput.setAssignee("MEHDI_DEV");
+		bugInput.setDueDate(time);
+		bugInput.setPriority(PriorityTypeDto.CRITICAL);
 
 		String url = String.format("http://localhost:%d/bug-tracker/api/bugs", port);
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(bugRequest),
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(bugInput),
 				String.class);
 		assertThat(response).isNotNull();
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-   	}
+	}
 
 	@Test
-	public void updateBug_validation_failed() {
+	void updateBug_validation_failed() {
 		long time = new Date().getTime();
-		BugRequest bugRequest = new BugRequest();
-		bugRequest.setAssignee("MEHDI_DEV");
-		bugRequest.setDueDate(time);
+		BugInput bugInput = new BugInput();
+		bugInput.setAssignee("MEHDI_DEV");
+		bugInput.setDueDate(time);
 
 		String url = String.format("http://localhost:%d/bug-tracker/api/bugs", port);
-		ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(bugRequest),
+		ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(bugInput),
 				Object.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
 
 
 	@Test
-	public void updateBug_notFound() throws NotFoundBugException {
+	void updateBug_notFound() throws NotFoundBugException, NotFoundProjectException {
 		doThrow(new NotFoundBugException("62fd44ad63ad587a21dbe7d9")).when(bugService).updateBug(any());
 		long time = new Date().getTime();
-		UpdateBugRequest bugRequest = new UpdateBugRequest();
-		bugRequest.setId("62fd44ad63ad587a21dbe7d9");
-		bugRequest.setAssignee("MEHDI_DEV");
-		bugRequest.setDueDate(time);
-		bugRequest.setPriority(PriorityTypeDto.CRITICAL);
-		bugRequest.setProject("RatePay");
-		bugRequest.setSummary("Wrong balance!");
-		bugRequest.setReporter("MR. EBRAHIMI");
-		bugRequest.setDescription("Wrong balance! after pay");
+		UpdateBugInput updateBugInput = new UpdateBugInput();
+		updateBugInput.setId("62fd44ad63ad587a21dbe7d9");
+		updateBugInput.setAssignee("MEHDI_DEV");
+		updateBugInput.setDueDate(time);
+		updateBugInput.setPriority(PriorityTypeDto.CRITICAL);
+		updateBugInput.setProjectId("RatePay");
+		updateBugInput.setSummary("Wrong balance!");
+		updateBugInput.setReporter("MR. EBRAHIMI");
+		updateBugInput.setDescription("Wrong balance! after pay");
 
 		String url = String.format("http://localhost:%d/bug-tracker/api/bugs", port);
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(bugRequest),
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(updateBugInput),
 				String.class);
 		assertThat(response).isNotNull();
 		assertThat(response.getBody()).isEqualTo("This bug does not exist: 62fd44ad63ad587a21dbe7d9");

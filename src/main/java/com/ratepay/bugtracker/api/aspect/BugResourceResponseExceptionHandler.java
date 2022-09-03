@@ -1,6 +1,7 @@
 package com.ratepay.bugtracker.api.aspect;
 
 import com.ratepay.bugtracker.exception.NotFoundBugException;
+import com.ratepay.bugtracker.exception.NotFoundProjectException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +21,13 @@ public class BugResourceResponseExceptionHandler extends ResponseEntityException
 
 
 	@ExceptionHandler(NotFoundBugException.class)
-	public final ResponseEntity<Object> handleBusinessException(NotFoundBugException ex ) {
+	public final ResponseEntity<Object> handleBusinessException(NotFoundBugException ex) {
+		logger.error(ex.getMessage(), ex);
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(NotFoundProjectException.class)
+	public final ResponseEntity<Object> handleBusinessException(NotFoundProjectException ex) {
 		logger.error(ex.getMessage(), ex);
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
 	}

@@ -8,13 +8,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class BugRequest {
+public class BugInput {
 
 	@NotEmpty
 	private String reporter;
 
 	@NotEmpty
-	private String project;
+	private String projectId;
 
 	@NotEmpty
 	private String summary;
