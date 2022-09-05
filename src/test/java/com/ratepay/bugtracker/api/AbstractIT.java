@@ -1,5 +1,6 @@
 package com.ratepay.bugtracker.api;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -23,9 +24,9 @@ public abstract class AbstractIT {
 		registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
 	}
 
-//	@AfterAll
-//	public static void tearDownContainers() {
-//		mongoDBContainer.stop();
-//	}
+	@AfterAll
+	public static void tearDownContainers() {
+		mongoDBContainer.stop();
+	}
 
 }
