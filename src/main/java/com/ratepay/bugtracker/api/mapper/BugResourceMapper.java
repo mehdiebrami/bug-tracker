@@ -15,6 +15,7 @@ public interface BugResourceMapper {
 	@Mapping(target = "project.id", source = "projectId")
 	Bug toBug(BugInput request);
 
+	@Mapping(target = "project.id", source = "projectId")
 	Bug toBug(UpdateBugInput request);
 
 	List<BugOutput> toBugResponseList(List<Bug> allBugs);

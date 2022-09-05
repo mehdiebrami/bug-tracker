@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.ratepay.bugtracker.api.mapper.BugResourceMapper;
 import com.ratepay.bugtracker.api.dto.BugInput;
 import com.ratepay.bugtracker.api.dto.BugOutput;
 import com.ratepay.bugtracker.api.dto.UpdateBugInput;
+import com.ratepay.bugtracker.api.mapper.BugResourceMapper;
 import com.ratepay.bugtracker.exception.NotFoundBugException;
 import com.ratepay.bugtracker.exception.NotFoundProjectException;
 import com.ratepay.bugtracker.service.BugService;
